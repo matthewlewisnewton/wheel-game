@@ -46,8 +46,7 @@ class FourHumorsPuzzle {
             });
         } catch (error) {
             console.error('Error loading config:', error);
-            // Fallback to default config
-            this.loadDefaultConfig();
+            throw error;
         }
     }
 
@@ -70,57 +69,6 @@ class FourHumorsPuzzle {
         });
 
         return ringLabels;
-    }
-
-    loadDefaultConfig() {
-        this.rings = [
-            { innerRadius: 90, outerRadius: 140, segments: 4 },
-            { innerRadius: 150, outerRadius: 200, segments: 8 },
-            { innerRadius: 210, outerRadius: 260, segments: 12 }
-        ];
-
-        this.humorData = {
-            choleric: {
-                color: '#f39c12',
-                gradientId: 'cholericGradient',
-                startAngle: 315,
-                ringLabels: [
-                    ['YELLOW BILE'],
-                    ['SUMMER', 'FIRE'],
-                    ['MARS', 'GALLBLADDER', 'AMBITIOUS']
-                ]
-            },
-            sanguine: {
-                color: '#e74c3c',
-                gradientId: 'sanguineGradient',
-                startAngle: 45,
-                ringLabels: [
-                    ['BLOOD'],
-                    ['SPRING', 'AIR'],
-                    ['JUPITER', 'HEART', 'CHEERFUL']
-                ]
-            },
-            melancholic: {
-                color: '#2c3e50',
-                gradientId: 'melancholicGradient',
-                startAngle: 135,
-                ringLabels: [
-                    ['BLACK BILE'],
-                    ['AUTUMN', 'EARTH'],
-                    ['SATURN', 'SPLEEN', 'THOUGHTFUL']
-                ]
-            },
-            phlegmatic: {
-                color: '#3498db',
-                gradientId: 'phlegmaticGradient',
-                startAngle: 225,
-                ringLabels: [
-                    ['PHLEGM'],
-                    ['WINTER', 'WATER'],
-                    ['VENUS', 'BRAIN', 'CALM']
-                ]
-            }
-        };
     }
 
     createArcSegments() {
