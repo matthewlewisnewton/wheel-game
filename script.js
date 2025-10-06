@@ -456,8 +456,6 @@ class FourHumorsPuzzle {
                 type: 'radialGradient',
                 stops: [
                     { offset: '0%', color: '#F4B827', opacity: 1 },
-                    { offset: '35%', color: '#F4B827', opacity: 1 },
-                    { offset: '70%', color: '#F06526', opacity: 1 },
                     { offset: '100%', color: '#B53008', opacity: 1 }
                 ]
             },
@@ -465,9 +463,7 @@ class FourHumorsPuzzle {
                 id: 'sanguineGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#E73833', opacity: 1 },
-                    { offset: '35%', color: '#E88DA8', opacity: 1 },
-                    { offset: '70%', color: '#ADEEC5', opacity: 1 },
+                    { offset: '0%', color: '#E88DA8', opacity: 1 },
                     { offset: '100%', color: '#B53008', opacity: 1 }
                 ]
             },
@@ -475,20 +471,16 @@ class FourHumorsPuzzle {
                 id: 'melancholicGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#5E18A1', opacity: 1 },
-                    { offset: '35%', color: '#C0C9FF', opacity: 1 },
-                    { offset: '70%', color: '#ADEEC5', opacity: 1 },
-                    { offset: '100%', color: '#D3CFCF', opacity: 1 }
+                    { offset: '0%', color: '#C0C9FF', opacity: 1 },
+                    { offset: '100%', color: '#5E18A1', opacity: 1 }
                 ]
             },
             {
                 id: 'phlegmaticGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#2BE7D7', opacity: 1 },
-                    { offset: '35%', color: '#FFFFFF', opacity: 1 },
-                    { offset: '70%', color: '#ADEEC5', opacity: 1 },
-                    { offset: '100%', color: '#B53008', opacity: 1 }
+                    { offset: '0%', color: '#FFFFFF', opacity: 1 },
+                    { offset: '100%', color: '#2BE7D7', opacity: 1 }
                 ]
             }
         ];
