@@ -1,0 +1,61 @@
+{
+  "rings": [
+    { "innerRadius": 90, "outerRadius": 140, "segments": 4 },
+    { "innerRadius": 150, "outerRadius": 200, "segments": 8 },
+    { "innerRadius": 210, "outerRadius": 260, "segments": 12 }
+  ],
+  "humors": {
+    "choleric": {
+      "color": "#f39c12",
+      "gradientId": "cholericGradient",
+      "startAngle": 315,
+      "arcs": [
+        "YELLOW BILE",
+        "SUMMER",
+        "FIRE",
+        "MARS",
+        "GALLBLADDER",
+        "AMBITIOUS"
+      ]
+    },
+    "sanguine": {
+      "color": "#e74c3c",
+      "gradientId": "sanguineGradient",
+      "startAngle": 45,
+      "arcs": [
+        "BLOOD",
+        "SPRING",
+        "AIR",
+        "JUPITER",
+        "HEART",
+        "CHEERFUL"
+      ]
+    },
+    "melancholic": {
+      "color": "#2c3e50",
+      "gradientId": "melancholicGradient",
+      "startAngle": 135,
+      "arcs": [
+        "BLACK BILE",
+        "AUTUMN",
+        "EARTH",
+        "SATURN",
+        "SPLEEN",
+        "THOUGHTFUL"
+      ]
+    },
+    "phlegmatic": {
+      "color": "#3498db",
+      "gradientId": "phlegmaticGradient",
+      "startAngle": 225,
+      "arcs": [
+        "PHLEGM",
+        "WINTER",
+        "WATER",
+        "VENUS",
+        "BRAIN",
+        "CALM"
+      ]
+    }
+  }
+}

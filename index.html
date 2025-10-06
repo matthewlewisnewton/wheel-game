@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Four Humors Puzzle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Humors Login Panel</h1>
+        <p class="subtitle">Restore harmony to the wheel and steady the realm to sign in.</p>
+
+        <div class="puzzle-area">
+            <svg id="puzzle-svg" width="600" height="600" viewBox="0 0 600 600">
+                <!-- Fixed inner circle with humor labels -->
+                <g id="inner-circle" class="fixed-center">
+                    <circle cx="300" cy="300" r="80" fill="#f5f5dc" stroke="#333" stroke-width="2"/>
+
+                    <!-- Humor labels in fixed positions -->
+                    <text x="300" y="230" text-anchor="middle" class="humor-label">CHOLERIC</text>
+                    <text x="370" y="305" text-anchor="middle" class="humor-label">SANGUINE</text>
+                    <text x="300" y="380" text-anchor="middle" class="humor-label">MELANCHOLIC</text>
+                    <text x="230" y="305" text-anchor="middle" class="humor-label">PHLEGMATIC</text>
+                </g>
+
+                <!-- Draggable arc segments will be dynamically created here -->
+                <g id="draggable-arcs"></g>
+            </svg>
+        </div>
+
+        <div class="game-controls">
+            <button id="shuffle-btn">Shuffle Pieces</button>
+            <button id="reset-btn">Reset</button>
+        </div>
+
+        <div class="game-info">
+            <blockquote class="lore">“Prove Thy Identity, through Balance of the sanguine zeal, Tempering the choleric blaze, Calm the phlegmatic tide, and Soothe the melancholic earth.”</blockquote>
+            <p class="hint">Shuffle when the omens sour, and reset to begin the rite anew.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
