@@ -455,36 +455,40 @@ class FourHumorsPuzzle {
                 id: 'cholericGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#fff5d6', opacity: 1 },
-                    { offset: '55%', color: '#f2b632', opacity: 1 },
-                    { offset: '100%', color: '#a86b06', opacity: 1 }
+                    { offset: '0%', color: '#F4B827', opacity: 1 },
+                    { offset: '35%', color: '#F4B827', opacity: 1 },
+                    { offset: '70%', color: '#F06526', opacity: 1 },
+                    { offset: '100%', color: '#B53008', opacity: 1 }
                 ]
             },
             {
                 id: 'sanguineGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#ffe4de', opacity: 1 },
-                    { offset: '55%', color: '#d84732', opacity: 1 },
-                    { offset: '100%', color: '#7b1405', opacity: 1 }
+                    { offset: '0%', color: '#E73833', opacity: 1 },
+                    { offset: '35%', color: '#E88DA8', opacity: 1 },
+                    { offset: '70%', color: '#ADEEC5', opacity: 1 },
+                    { offset: '100%', color: '#B53008', opacity: 1 }
                 ]
             },
             {
                 id: 'melancholicGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#d9e3ef', opacity: 1 },
-                    { offset: '55%', color: '#334b5f', opacity: 1 },
-                    { offset: '100%', color: '#182231', opacity: 1 }
+                    { offset: '0%', color: '#5E18A1', opacity: 1 },
+                    { offset: '35%', color: '#C0C9FF', opacity: 1 },
+                    { offset: '70%', color: '#ADEEC5', opacity: 1 },
+                    { offset: '100%', color: '#D3CFCF', opacity: 1 }
                 ]
             },
             {
                 id: 'phlegmaticGradient',
                 type: 'radialGradient',
                 stops: [
-                    { offset: '0%', color: '#e1f3ff', opacity: 1 },
-                    { offset: '55%', color: '#328bc4', opacity: 1 },
-                    { offset: '100%', color: '#145173', opacity: 1 }
+                    { offset: '0%', color: '#2BE7D7', opacity: 1 },
+                    { offset: '35%', color: '#FFFFFF', opacity: 1 },
+                    { offset: '70%', color: '#ADEEC5', opacity: 1 },
+                    { offset: '100%', color: '#B53008', opacity: 1 }
                 ]
             }
         ];
