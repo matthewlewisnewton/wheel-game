@@ -252,6 +252,7 @@ class FourHumorsPuzzle {
         // Button events
         document.getElementById('shuffle-btn').addEventListener('click', this.shufflePieces.bind(this));
         document.getElementById('reset-btn').addEventListener('click', this.resetPuzzle.bind(this));
+        document.getElementById('debug-zoom-btn').addEventListener('click', this.showMedievalZoomCall.bind(this));
     }
 
     handleMouseDown(e) {
