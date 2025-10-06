@@ -34,7 +34,7 @@
     "melancholic": {
       "color": "#2c3e50",
       "gradientId": "melancholicGradient",
-      "startAngle": 135,
+      "startAngle": 225,
       "arcs": [
         "BLACK BILE",
         "AUTUMN",
@@ -47,7 +47,7 @@
     "phlegmatic": {
       "color": "#3498db",
       "gradientId": "phlegmaticGradient",
-      "startAngle": 225,
+      "startAngle": 135,
       "arcs": [
         "PHLEGM",
         "WINTER",
