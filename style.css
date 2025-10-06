@@ -240,6 +240,127 @@ h1 {
     pointer-events: none;
 }
 
+/* Medieval Zoom Call Popup */
+.zoom-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.zoom-overlay.active {
+    opacity: 1;
+}
+
+.zoom-popup {
+    background: linear-gradient(135deg, #2a1810 0%, #1a0f08 100%);
+    border: 3px solid #d4af37;
+    border-radius: 18px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.7);
+    text-align: center;
+    animation: popupSlideIn 0.5s ease-out;
+}
+
+@keyframes popupSlideIn {
+    from {
+        transform: translateY(-50px) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.zoom-header {
+    margin-bottom: 30px;
+}
+
+.zoom-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2em;
+    color: #d4af37;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    margin-bottom: 10px;
+}
+
+.zoom-status {
+    font-family: 'Uncial Antiqua', cursive;
+    font-size: 1.1em;
+    color: #f0d8a8;
+    letter-spacing: 0.08em;
+}
+
+.zoom-body {
+    padding: 20px 0;
+}
+
+.connection-animation {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.mystical-circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #d4af37 0%, #8b7330 100%);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    animation: mysticalPulse 1.5s ease-in-out infinite;
+}
+
+.mystical-circle:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.mystical-circle:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.mystical-circle:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes mysticalPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+}
+
+.connection-text {
+    font-family: 'Crimson Text', serif;
+    font-size: 1.3em;
+    color: #f5f5dc;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+
+.connection-subtext {
+    font-family: 'Crimson Text', serif;
+    font-size: 1em;
+    color: #c9b896;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     #puzzle-svg {
@@ -256,5 +377,13 @@ h1 {
     .game-container {
         padding: 22px;
         margin: 14px;
+    }
+
+    .zoom-popup {
+        padding: 30px 20px;
+    }
+
+    .zoom-title {
+        font-size: 1.6em;
     }
 }

@@ -615,9 +615,41 @@ class FourHumorsPuzzle {
         const allSnapped = this.arcSegments.every(arc => arc.snapped);
         if (allSnapped) {
             setTimeout(() => {
-                alert('Congratulations! You have completed the Four Humors puzzle!');
+                this.showMedievalZoomCall();
             }, 500);
         }
+    }
+
+    showMedievalZoomCall() {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'zoom-overlay';
+
+        // Create popup
+        const popup = document.createElement('div');
+        popup.className = 'zoom-popup';
+
+        popup.innerHTML = `
+            <div class="zoom-header">
+                <div class="zoom-title">Ye Olde Scrying Mirror</div>
+                <div class="zoom-status">Connecting to the Council...</div>
+            </div>
+            <div class="zoom-body">
+                <div class="connection-animation">
+                    <div class="mystical-circle"></div>
+                    <div class="mystical-circle"></div>
+                    <div class="mystical-circle"></div>
+                </div>
+                <p class="connection-text">Balancing the humors...</p>
+                <p class="connection-subtext">The realm's wisest scholars await thee</p>
+            </div>
+        `;
+
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+
+        // Animate in
+        setTimeout(() => overlay.classList.add('active'), 10);
     }
 
     // Physics system for arc collision and pushing
