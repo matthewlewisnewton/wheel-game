@@ -484,8 +484,14 @@ class FourHumorsPuzzle {
 
     getPointerAngle(clientX, clientY) {
         const rect = this.svg.getBoundingClientRect();
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
+
+        // Convert from screen coordinates to SVG coordinate space
+        // The SVG has a viewBox="0 0 600 600" but may be rendered at different sizes
+        const scaleX = 600 / rect.width;
+        const scaleY = 600 / rect.height;
+
+        const x = (clientX - rect.left) * scaleX;
+        const y = (clientY - rect.top) * scaleY;
 
         const dx = x - this.centerX;
         const dy = y - this.centerY;
