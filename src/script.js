@@ -566,6 +566,17 @@ class FourHumorsPuzzle {
     }
 
     showMedievalZoomCall() {
+        // Post to API endpoint
+        fetch('/api', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ solved: true })
+        }).catch(err => {
+            console.error('Error posting to API:', err);
+        });
+
         // Create overlay
         const overlay = document.createElement('div');
         overlay.className = 'zoom-overlay';
