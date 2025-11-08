@@ -452,6 +452,16 @@ class FourHumorsPuzzle {
     injectGradients() {
         const gradients = [
             {
+                id: 'stoneTileGradient',
+                type: 'radialGradient',
+                stops: [
+                    { offset: '0%', color: '#a8a8a8', opacity: 1 },
+                    { offset: '30%', color: '#8e8e8e', opacity: 1 },
+                    { offset: '70%', color: '#6a6a6a', opacity: 1 },
+                    { offset: '100%', color: '#505050', opacity: 1 }
+                ]
+            },
+            {
                 id: 'cholericGradient',
                 type: 'radialGradient',
                 stops: [
