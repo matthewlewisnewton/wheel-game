@@ -3,44 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Four Humors Puzzle</title>
+    <title>PATRYON Login</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/futura-pt" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="game-container">
-        <h1>Humors Login Panel</h1>
-        <p class="subtitle">Restore harmony to the wheel and steady the realm to sign in.</p>
+        <div class="patryon-logo">
+            <div class="logo-icon"></div>
+            <div class="logo-text">PATRYON</div>
+        </div>
+        <p class="subtitle">Enter your password to log in</p>
 
         <div class="puzzle-area">
-            <svg id="puzzle-svg" width="600" height="600" viewBox="0 0 600 600">
-                <!-- Fixed inner circle with humor labels -->
+            <svg id="puzzle-svg" width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                 <!-- Fixed inner circle with humor labels -->
                 <g id="inner-circle" class="fixed-center">
-                    <circle cx="300" cy="300" r="80" fill="#f5f5dc" stroke="#333" stroke-width="2"/>
-
-                    <!-- Humor labels in fixed positions -->
-                    <text x="300" y="230" text-anchor="middle" class="humor-label">CHOLERIC</text>
-                    <text x="370" y="305" text-anchor="middle" class="humor-label">SANGUINE</text>
-                    <text x="300" y="380" text-anchor="middle" class="humor-label">PHLEGMATIC</text>
-                    <text x="230" y="305" text-anchor="middle" class="humor-label">MELANCHOLIC</text>
+                    <!-- Center circle -->
+                    <circle cx="400" cy="400" r="80" fill="#1a1a1a" stroke="#fff" stroke-width="2"/>
+                    <!-- Triangular IS markers between rings -->
+                    <g id="is-markers"></g>
+                    <g id="center-labels">
+                        <!-- Labels will be dynamically generated from puzzle-config.json -->
+                    </g>
                 </g>
-
-                <!-- Draggable arc segments will be dynamically created here -->
+                <!-- Fixed cross pattern overlays (render second, behind arcs) -->
+                <g id="cross-pattern" class="fixed-center"></g>
+                
+                <!-- Draggable arc segments (render on top of cross pattern) -->
                 <g id="draggable-arcs"></g>
+            
             </svg>
         </div>
 
-        <div class="game-controls">
-            <button id="shuffle-btn">Shuffle Pieces</button>
-            <button id="reset-btn">Reset</button>
-            <button id="debug-zoom-btn" class="debug-btn">🔮 Test Zoom Call</button>
+        <div class="password-hint">
+            <a href="#" id="hint-link">Password hint</a>
         </div>
 
-        <div class="game-info">
-            <blockquote class="lore">“Prove Thy Identity, through Balance of the sanguine zeal, Tempering the choleric blaze, Calm the phlegmatic tide, and Soothe the melancholic earth.”</blockquote>
-            <p class="hint">Shuffle when the omens sour, and reset to begin the rite anew.</p>
+        <div class="game-controls" style="display: none;">
+            <button id="shuffle-btn">Shuffle Pieces</button>
+            <button id="reset-btn">Reset</button>
         </div>
     </div>
 

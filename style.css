@@ -9,58 +9,85 @@
 }
 
 body {
-    font-family: 'Crimson Text', serif;
-    background-color: #f4e7c6;
-    background-image: linear-gradient(135deg, rgba(189, 164, 110, 0.35), rgba(251, 244, 225, 0.45)),
-        url('https://www.transparenttextures.com/patterns/aged-paper.png');
-    background-size: 100% 100%, 512px 512px;
-    color: #3a2a12;
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
+    background-color: #0a0a0a;
+    background-image: 
+        linear-gradient(135deg, rgba(30, 30, 30, 0.7), rgba(10, 10, 10, 0.9)),
+        url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJ0dXJidWxlbmNlIiBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjE1Ii8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMWExYTFhIiBmaWx0ZXI9InVybCgjbm9pc2UpIiBvcGFjaXR5PSIwLjQiLz48L3N2Zz4=');
+    background-size: 100% 100%, 400px 400px;
+    color: #e0e0e0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px;
+    padding: 20px;
 }
 
 .game-container {
     text-align: center;
-    background: rgba(255, 252, 240, 0.9);
-    padding: 28px 32px;
-    border-radius: 18px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(164, 129, 54, 0.5);
-    max-width: 760px;
+    background: transparent;
+    padding: 40px 60px;
+    max-width: 1400px;
+    width: 100%;
 }
 
-h1 {
-    margin-bottom: 8px;
-    font-family: 'Cinzel', serif;
-    font-size: 2.8em;
-    letter-spacing: 0.1em;
-    color: #d4af37;
+/* Patryon Logo */
+.patryon-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: #ffffff;
+    border-radius: 50%;
+    position: relative;
+}
+
+.logo-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    background: #000000;
+    clip-path: polygon(30% 0%, 70% 0%, 70% 35%, 100% 35%, 50% 100%, 0% 35%, 30% 35%);
+}
+
+.logo-text {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 4em;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: #ffffff;
     text-transform: uppercase;
-    text-shadow: 0 0 18px rgba(212, 175, 55, 0.35);
 }
 
 .subtitle {
-    font-family: 'Uncial Antiqua', cursive;
-    font-size: 1.05em;
-    color: #f0d8a8;
-    margin-bottom: 26px;
-    letter-spacing: 0.08em;
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
+    font-size: 1.8em;
+    color: #e0e0e0;
+    margin-bottom: 40px;
+    letter-spacing: 0.03em;
+    font-weight: 400;
 }
 
 .puzzle-area {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
+    margin: 40px 0;
 }
 
 #puzzle-svg {
-    background: radial-gradient(circle, #f2e9dc 0%, #d6c4a6 55%, #a88d5d 100%);
-    border-radius: 50%;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.45), inset 0 0 22px rgba(61, 35, 12, 0.4);
-    border: 3px solid rgba(161, 124, 56, 0.6);
+    background: transparent;
+    max-width: 100%;
+    height: auto;
 }
 
 /* Fixed center circle styling */
@@ -68,21 +95,31 @@ h1 {
     pointer-events: none;
 }
 
-.humor-label {
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    font-weight: 600;
-    fill: #4b2b0e;
-    letter-spacing: 0.12em;
+/* IS Triangle markers */
+.is-marker {
+    pointer-events: none;
+}
+
+.is-marker polygon {
+    fill: #1a1a1a;
+    stroke: #fff;
+    stroke-width: 2;
+}
+
+.is-marker text {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 20px;
+    font-weight: 900;
+    fill: #ffffff;
+    text-anchor: middle;
     text-transform: uppercase;
-    text-shadow: 0 0 4px rgba(251, 245, 224, 0.7);
 }
 
 /* Draggable arc segments */
 .arc-segment {
     cursor: grab;
     stroke-width: 2;
-    stroke: rgba(111, 80, 35, 0.7);
+    stroke: rgba(255, 255, 255, 0.3);
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
@@ -95,35 +132,26 @@ h1 {
 .arc-segment.dragging {
     cursor: grabbing;
     opacity: 0.8;
-    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.55));
+    filter: drop-shadow(0 8px 12px rgba(255, 255, 255, 0.3));
 }
 
 .arc-segment.snapped {
     opacity: 1;
     cursor: default;
-    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
 }
 
 .arc-segment.snapped path {
-    stroke: rgba(212, 175, 55, 0.9);
-    stroke-width: 3;
+    stroke: rgba(255, 255, 255, 0.6);
+    stroke-width: 2;
 }
 
-/* Color schemes for the four humors - gray until snapped */
-.choleric path {
-    fill: #8a8a8a;
-}
-
-.sanguine path {
-    fill: #8a8a8a;
-}
-
-.melancholic path {
-    fill: #8a8a8a;
-}
-
+/* Color schemes - inverted colors (white) until snapped */
+.choleric path,
+.sanguine path,
+.melancholic path,
 .phlegmatic path {
-    fill: #8a8a8a;
+    fill: #ffffff;
 }
 
 /* Reveal true colors when snapped */
@@ -147,22 +175,81 @@ h1 {
 .ring-0 { stroke-width: 1; }
 .ring-1 { stroke-width: 1.5; }
 .ring-2 { stroke-width: 2; }
+.ring-3 { stroke-width: 2; }
 
-/* Game controls */
+/* Cross pattern overlay */
+.cross-segment {
+    pointer-events: none;
+}
+
+.cross-segment path {
+    fill: #000000;
+    stroke: #ffffff;
+    stroke-width: 2;
+}
+
+.cross-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 18px;
+    font-weight: 900;
+    fill: #ffffff;
+    text-anchor: middle;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    pointer-events: none;
+}
+
+/* Text labels on arcs */
+.arc-text {
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    fill: #000000;
+    text-anchor: middle;
+    pointer-events: none;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.arc-segment.snapped .arc-text {
+    fill: #ffffff;
+}
+
+/* Password hint */
+.password-hint {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+}
+
+.password-hint a {
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
+    font-size: 1.3em;
+    color: #e0e0e0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.password-hint a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Game controls (hidden by default) */
 .game-controls {
     margin: 20px 0;
 }
 
 .game-controls button {
-    background: linear-gradient(135deg, #f0d89c, #c39a52);
-    color: #3a2a12;
-    border: 1px solid rgba(153, 109, 29, 0.6);
+    background: linear-gradient(135deg, #333, #1a1a1a);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 12px 26px;
     margin: 0 12px;
     border-radius: 30px;
     cursor: pointer;
     font-size: 15px;
-    font-family: 'Cinzel', serif;
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -170,80 +257,12 @@ h1 {
 
 .game-controls button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 18px rgba(255, 255, 255, 0.2);
 }
 
 .game-controls button:active {
     transform: translateY(1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-.debug-btn {
-    background: linear-gradient(135deg, #9b7fc4, #6b4f8a) !important;
-    border: 1px solid rgba(107, 79, 138, 0.8) !important;
-    opacity: 0.7;
-}
-
-/* Game info */
-.game-info {
-    margin-top: 26px;
-    padding: 20px 24px;
-    background: rgba(255, 248, 232, 0.9);
-    border-radius: 14px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid rgba(212, 175, 55, 0.35);
-    box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.5);
-}
-
-.game-info p {
-    font-size: 15px;
-    line-height: 1.6;
-    color: #4a3517;
-}
-
-.game-info .hint {
-    font-family: 'Uncial Antiqua', cursive;
-    font-size: 0.95em;
-    color: #6e4f1d;
-    margin-top: 12px;
-}
-
-.lore {
-    font-family: 'Crimson Text', serif;
-    font-style: italic;
-    font-size: 1.05em;
-    line-height: 1.7;
-    color: #5b4217;
-    border-left: 3px solid rgba(164, 129, 54, 0.5);
-    padding-left: 16px;
-    margin-bottom: 18px;
-    letter-spacing: 0.05em;
-}
-
-/* Snap zones (invisible but help with positioning) */
-.snap-zone {
-    fill: transparent;
-    stroke: transparent;
-}
-
-.snap-zone.highlight {
-    stroke: #f39c12;
-    stroke-width: 2;
-    stroke-dasharray: 5,5;
-    opacity: 0.5;
-}
-
-/* Text labels on arcs */
-.arc-text {
-    font-family: 'Cinzel', serif;
-    font-size: 11px;
-    font-weight: 600;
-    fill: #3a2a12;
-    text-shadow: 0 0 3px rgba(255, 248, 225, 0.7);
-    text-anchor: middle;
-    pointer-events: none;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
 }
 
 /* Medieval Zoom Call Popup */
@@ -253,7 +272,7 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.95);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -267,13 +286,13 @@ h1 {
 }
 
 .zoom-popup {
-    background: linear-gradient(135deg, #2a1810 0%, #1a0f08 100%);
-    border: 3px solid #d4af37;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    border: 3px solid #ffffff;
     border-radius: 18px;
     padding: 40px;
     max-width: 500px;
     width: 90%;
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.7);
     text-align: center;
     animation: popupSlideIn 0.5s ease-out;
 }
@@ -294,19 +313,20 @@ h1 {
 }
 
 .zoom-title {
-    font-family: 'Cinzel', serif;
+    font-family: 'Cinzel Decorative', serif;
     font-size: 2em;
-    color: #d4af37;
+    font-weight: 900;
+    color: #ffffff;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
     margin-bottom: 10px;
 }
 
 .zoom-status {
-    font-family: 'Uncial Antiqua', cursive;
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
     font-size: 1.1em;
-    color: #f0d8a8;
+    color: #e0e0e0;
     letter-spacing: 0.08em;
 }
 
@@ -325,8 +345,8 @@ h1 {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: radial-gradient(circle, #d4af37 0%, #8b7330 100%);
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    background: radial-gradient(circle, #ffffff 0%, #888 100%);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
     animation: mysticalPulse 1.5s ease-in-out infinite;
 }
 
@@ -354,35 +374,57 @@ h1 {
 }
 
 .connection-text {
-    font-family: 'Crimson Text', serif;
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
     font-size: 1.3em;
-    color: #f5f5dc;
+    color: #f5f5f5;
     margin-bottom: 10px;
     font-style: italic;
 }
 
 .connection-subtext {
-    font-family: 'Crimson Text', serif;
+    font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
     font-size: 1em;
-    color: #c9b896;
+    color: #cccccc;
 }
 
 /* Responsive design */
+@media (max-width: 1200px) {
+    .game-container {
+        padding: 30px 40px;
+    }
+    
+    .logo-text {
+        font-size: 3em;
+    }
+    
+    .subtitle {
+        font-size: 1.5em;
+    }
+}
+
 @media (max-width: 768px) {
     #puzzle-svg {
-        width: 90vw;
-        height: 90vw;
-        max-width: 520px;
-        max-height: 520px;
+        width: 95vw;
+        height: 95vw;
+        max-width: 600px;
+        max-height: 600px;
     }
 
-    h1 {
-        font-size: 2.2em;
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .logo-text {
+        font-size: 2em;
+    }
+    
+    .subtitle {
+        font-size: 1.2em;
     }
 
     .game-container {
-        padding: 22px;
-        margin: 14px;
+        padding: 20px;
     }
 
     .zoom-popup {
@@ -391,5 +433,14 @@ h1 {
 
     .zoom-title {
         font-size: 1.6em;
+    }
+    
+    .password-hint {
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .password-hint a {
+        font-size: 1.1em;
     }
 }

@@ -1,60 +1,63 @@
 {
   "rings": [
-    { "innerRadius": 90, "outerRadius": 140, "segments": 4 },
-    { "innerRadius": 150, "outerRadius": 200, "segments": 8 },
-    { "innerRadius": 210, "outerRadius": 260, "segments": 12 }
+    { "innerRadius": 100, "outerRadius": 135, "segments": 4 },
+    { "innerRadius": 165, "outerRadius": 200, "segments": 4 },
+    { "innerRadius": 215, "outerRadius": 250, "segments": 4 },
+    { "innerRadius": 265, "outerRadius": 300, "segments": 4 }
+  ],
+  "crossSections": [
+    { "label": "PURITY", "angle": 315 },
+    { "label": "HEALTH", "angle": 45 },
+    { "label": "CONTROL", "angle": 225 },
+    { "label": "WEALTH", "angle": 135 }
   ],
   "humors": {
     "choleric": {
-      "color": "#f39c12",
+      "color": "#d4af37",
       "gradientId": "cholericGradient",
       "startAngle": 315,
+      "label": "YELLOW\nBILE",
       "arcs": [
-        "YELLOW BILE",
-        "SUMMER",
-        "FIRE",
-        "MARS",
-        "GALLBLADDER",
-        "AMBITIOUS"
+        "CROWNING",
+        "SUPPLEMENT",
+        "VICTORY",
+        "REBORN"
       ]
     },
     "sanguine": {
-      "color": "#e74c3c",
+      "color": "#e88da8",
       "gradientId": "sanguineGradient",
       "startAngle": 45,
+      "label": "BLOOD",
       "arcs": [
-        "BLOOD",
-        "SPRING",
-        "AIR",
-        "JUPITER",
-        "HEART",
-        "CHEERFUL"
+        "POLISHING",
+        "MAKEUP",
+        "LEECH",
+        "SANCTIFIED"
       ]
     },
     "melancholic": {
-      "color": "#2c3e50",
+      "color": "#7b68ee",
       "gradientId": "melancholicGradient",
       "startAngle": 225,
+      "label": "BLACK\nBILE",
       "arcs": [
-        "BLACK BILE",
-        "AUTUMN",
-        "EARTH",
-        "SATURN",
-        "SPLEEN",
-        "THOUGHTFUL"
+        "PROTECTING",
+        "KNOWLEDGE",
+        "TINFOIL",
+        "SCREAMED"
       ]
     },
     "phlegmatic": {
-      "color": "#3498db",
+      "color": "#2be7d7",
       "gradientId": "phlegmaticGradient",
       "startAngle": 135,
+      "label": "PHLEM",
       "arcs": [
-        "PHLEGM",
-        "WINTER",
-        "WATER",
-        "VENUS",
-        "BRAIN",
-        "CALM"
+        "COCOONING",
+        "SKINCARE",
+        "PEARL",
+        "DEEPENED"
       ]
     }
   }
