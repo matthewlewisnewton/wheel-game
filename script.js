@@ -155,7 +155,7 @@ class FourHumorsPuzzle {
 
             // Add label text
             const labelAngle = (section.angle - 90) * Math.PI / 180;
-            const labelRadius = 232; // Positioned in ring 2 (215-250)
+            const labelRadius = 182; // Positioned closer to center, in ring 1 (165-200)
             const labelX = this.centerX + labelRadius * Math.cos(labelAngle);
             const labelY = this.centerY + labelRadius * Math.sin(labelAngle);
 
@@ -163,7 +163,7 @@ class FourHumorsPuzzle {
             text.setAttribute('x', labelX);
             text.setAttribute('y', labelY + 5);
             text.setAttribute('class', 'cross-label');
-            text.setAttribute('transform', `rotate(${section.angle}, ${labelX}, ${labelY})`);
+            text.setAttribute('transform', `rotate(${section.angle + 90}, ${labelX}, ${labelY})`);
             text.textContent = section.label;
             group.appendChild(text);
 
@@ -696,9 +696,10 @@ class FourHumorsPuzzle {
     checkWinCondition() {
         const allSnapped = this.arcSegments.every(arc => arc.snapped);
         if (allSnapped) {
-            setTimeout(() => {
-                this.showSuccessMessage();
-            }, 500);
+            this.showSuccessMessage();
+            // setTimeout(() => {
+            //     this.showSuccessMessage();
+            // }, 500);
         }
     }
 
