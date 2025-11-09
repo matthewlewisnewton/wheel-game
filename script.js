@@ -58,11 +58,23 @@ class FourHumorsPuzzle {
     createISMarkers() {
         const isMarkersGroup = document.getElementById('is-markers');
         const angles = [0, 90, 180, 270]; // Four cardinal directions
-        const radius = 150; // Between rings - centered in the wider gap
 
         angles.forEach(angle => {
             const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             group.classList.add('is-marker');
+
+            // Adjust radius based on angle for better visual placement
+            let radius = 142;
+            // if (angle === 0) {
+            //     // Top - looks good, keep it
+            //     radius = 142;
+            // } else if (angle === 180) {
+            //     // Bottom - needs to be a bit further out, centered between rings
+            //     radius = 142;
+            // } else if (angle === 90 || angle === 270) {
+            //     // Left and right - need to be further from center
+            //     radius = 142;
+            // }
 
             // Create triangle pointing outward
             const angleRad = (angle - 90) * Math.PI / 180;
@@ -71,9 +83,9 @@ class FourHumorsPuzzle {
             // Add "IS" text - positioned in the gap and rotated
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('x', x);
-            text.setAttribute('y', y + 6);
+            text.setAttribute('y', y);
             text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('transform', `rotate(${angle}, ${x}, ${y + 6})`);
+            text.setAttribute('transform', `rotate(${angle}, ${x}, ${y})`);
             text.textContent = 'IS';
             group.appendChild(text);
 
