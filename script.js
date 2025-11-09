@@ -71,7 +71,7 @@ class FourHumorsPuzzle {
             // Add "IS" text - positioned in the gap and rotated
             const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('x', x);
-            text.setAttribute('y', y + 6);
+            text.setAttribute('y', y + 12);
             text.setAttribute('text-anchor', 'middle');
             text.setAttribute('transform', `rotate(${angle}, ${x}, ${y + 6})`);
             text.textContent = 'IS';
