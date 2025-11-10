@@ -3,6 +3,8 @@ class JerryVideoManager {
         this.video1 = document.getElementById('jerry-video-1');
         this.video2 = document.getElementById('jerry-video-2');
         this.textBox = document.getElementById('jerry-text');
+        this.speechBubble = document.getElementById('jerry-speech-bubble');
+        this.speechBubbleContent = document.querySelector('.speech-bubble-content');
 
         // Track which video is currently active
         this.currentVideo = this.video1;
@@ -10,6 +12,8 @@ class JerryVideoManager {
         this.isWaiting = false;
         this.isPlayingClickedVideo = false; // Track if we're playing the clicked video
         this.pendingTimeout = null; // Track pending setTimeout for cancellation
+        this.typingTimeout = null; // Track typing animation timeout
+        this.fadeOutTimeout = null; // Track speech bubble fade out timeout
 
         // Define video list with optional text
         // jerry-vibing appears twice to make it twice as likely to be selected
@@ -17,6 +21,7 @@ class JerryVideoManager {
             { src: './jarry-wave.mp4', text: null },
             { src: './jerry-lizard-eyes.mp4', text: null },
             { src: './jerry-sideeye.mp4', text: null },
+            { src: './jerry-vibing.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
         ];
@@ -83,12 +88,12 @@ class JerryVideoManager {
         this.nextVideo.src = videoData.src;
         this.nextVideo.load();
 
-        // Wait 1 second before swapping
+        // Wait 1.5 seconds before swapping
         this.pendingTimeout = setTimeout(() => {
             this.swapVideos(videoData.text);
             this.isWaiting = false;
             this.pendingTimeout = null;
-        }, 1000);
+        }, 1500);
     }
 
     onVideoClicked() {
@@ -99,22 +104,53 @@ class JerryVideoManager {
         }
         this.isWaiting = false;
 
-        // Stop current video immediately
-        this.currentVideo.pause();
-        this.currentVideo.currentTime = 0;
-
         this.hideText();
         this.isPlayingClickedVideo = true;
 
-        // Always play the poked-hint video on the current video element
-        this.currentVideo.src = this.clickedVideo;
-        this.currentVideo.load();
-        this.currentVideo.style.display = 'block';
-        this.currentVideo.play();
+        // Show speech bubble
+        this.showSpeechBubble();
 
-        // Make sure next video is hidden
-        this.nextVideo.style.display = 'none';
-        this.nextVideo.pause();
+        // Immediately stop both videos and reset their states
+        this.video1.pause();
+        this.video1.style.opacity = '1';
+        this.video2.pause();
+        this.video2.style.opacity = '1';
+
+        // Store references
+        const videoToHide = this.currentVideo;
+        const videoToShow = this.nextVideo;
+
+        // Hide the current video immediately
+        videoToHide.style.display = 'none';
+        videoToHide.currentTime = 0;
+
+        // Load the poked-hint video in the next video element
+        videoToShow.src = this.clickedVideo;
+        videoToShow.load();
+
+        // Prepare new video underneath (opacity 0, but visible)
+        videoToShow.style.display = 'block';
+        videoToShow.style.opacity = '0';
+
+        // Wait for next frame to ensure display:block has taken effect
+        requestAnimationFrame(() => {
+            // Start playing the new video
+            videoToShow.play();
+
+            // Fade in poked-hint
+            videoToShow.style.opacity = '1';
+
+            // Wait for fade transition (500ms), then clean up
+            setTimeout(() => {
+                // Swap references
+                const temp = this.currentVideo;
+                this.currentVideo = this.nextVideo;
+                this.nextVideo = temp;
+
+                // Reset old video opacity for next use
+                videoToHide.style.opacity = '1';
+            }, 500);
+        });
     }
 
     swapVideos(text) {
@@ -122,20 +158,33 @@ class JerryVideoManager {
         const videoToHide = this.currentVideo;
         const videoToShow = this.nextVideo;
 
-        // Hide current video first
-        videoToHide.style.display = 'none';
-        videoToHide.pause();
+        // Prepare new video underneath (opacity 0, but visible)
+        videoToShow.style.display = 'block';
+        videoToShow.style.opacity = '0';
 
-        // Swap references
-        const temp = this.currentVideo;
-        this.currentVideo = this.nextVideo;
-        this.nextVideo = temp;
-
-        // Wait for next frame to ensure display:none has taken effect
+        // Wait for next frame to ensure display:block has taken effect
         requestAnimationFrame(() => {
-            // Show and play next video
-            videoToShow.style.display = 'block';
+            // Start playing the new video
             videoToShow.play();
+
+            // Crossfade: fade out current, fade in next
+            videoToHide.style.opacity = '0';
+            videoToShow.style.opacity = '1';
+
+            // Wait for fade transition (500ms), then clean up
+            setTimeout(() => {
+                // Hide and pause the old video
+                videoToHide.style.display = 'none';
+                videoToHide.pause();
+
+                // Swap references
+                const temp = this.currentVideo;
+                this.currentVideo = this.nextVideo;
+                this.nextVideo = temp;
+
+                // Reset old video opacity for next use
+                videoToHide.style.opacity = '1';
+            }, 500);
         });
 
         // Handle text
@@ -171,5 +220,58 @@ class JerryVideoManager {
 
     hideText() {
         this.textBox.style.display = 'none';
+    }
+
+    showSpeechBubble() {
+        const message = "Why are you bothering me?\nHave you tried looking at the art?";
+
+        // Clear any existing timeouts
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+        if (this.fadeOutTimeout) {
+            clearTimeout(this.fadeOutTimeout);
+        }
+
+        // Reset and show bubble
+        this.speechBubbleContent.textContent = '';
+        this.speechBubble.style.display = 'block';
+        this.speechBubble.classList.remove('visible');
+
+        // Fade in after 0.8 seconds
+        setTimeout(() => {
+            this.speechBubble.classList.add('visible');
+
+            // Start typing animation after fade in
+            this.typeText(message, 0);
+        }, 800);
+
+        // Schedule fade out when video ends (~7 seconds total, fade out at ~6.5s)
+        this.fadeOutTimeout = setTimeout(() => {
+            this.speechBubble.classList.remove('visible');
+            setTimeout(() => {
+                this.speechBubble.style.display = 'none';
+            }, 500);
+        }, 6500);
+    }
+
+    typeText(message, index) {
+        if (index < message.length) {
+            this.speechBubbleContent.textContent += message[index];
+            this.typingTimeout = setTimeout(() => {
+                this.typeText(message, index + 1);
+            }, 30); // Type one character every 30ms
+        }
+    }
+
+    hideSpeechBubble() {
+        if (this.typingTimeout) {
+            clearTimeout(this.typingTimeout);
+        }
+        if (this.fadeOutTimeout) {
+            clearTimeout(this.fadeOutTimeout);
+        }
+        this.speechBubble.classList.remove('visible');
+        this.speechBubble.style.display = 'none';
     }
 }
