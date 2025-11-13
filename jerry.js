@@ -16,6 +16,7 @@ class JerryVideoManager {
         this.typingTimeout = null; // Track typing animation timeout
         this.fadeOutTimeout = null; // Track speech bubble fade out timeout
         this.isClickDebounced = false; // Debounce flag to prevent multiple clicks
+        this.videoHistory = []; // Track recently played videos to avoid repetition
 
         // Define video list with optional text
         // jerry-vibing appears twice to make it twice as likely to be selected
@@ -31,7 +32,8 @@ class JerryVideoManager {
             { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT" },
         ];
 
-        this.clickedVideo = './jerry-poked-hint.mp4'; // Special video for clicks
+        // this.clickedVideo = './jerry-poked-hint.mp4'; // Special video for clicks
+        this.clickedVideo = './jerry-mad-at-being-poked.mp4';
 
         this.setupEventListeners();
         this.startInitialVideo();
@@ -48,6 +50,33 @@ class JerryVideoManager {
                 this.currentVideo.play();
             }, { once: true });
         }
+    }
+
+    selectRandomVideo() {
+        // Filter out videos from recent history to avoid repetition
+        let availableVideos = this.videos.filter(video =>
+            !this.videoHistory.includes(video.src)
+        );
+
+        // If all videos would be filtered out (shouldn't happen with 9 videos and 2 history),
+        // just avoid the most recent one
+        if (availableVideos.length === 0) {
+            availableVideos = this.videos.filter(video =>
+                video.src !== this.videoHistory[this.videoHistory.length - 1]
+            );
+        }
+
+        // Select random video from available pool
+        const randomIndex = Math.floor(Math.random() * availableVideos.length);
+        const selectedVideo = availableVideos[randomIndex];
+
+        // Add to history and limit to last 2 videos
+        this.videoHistory.push(selectedVideo.src);
+        if (this.videoHistory.length > 2) {
+            this.videoHistory.shift(); // Remove oldest entry
+        }
+
+        return selectedVideo;
     }
 
     setupEventListeners() {
@@ -145,9 +174,8 @@ class JerryVideoManager {
         setTimeout(() => {
             this.hideSpeechBubble();
 
-            // Preload next video in background
-            const randomIndex = Math.floor(Math.random() * this.videos.length);
-            const videoData = this.videos[randomIndex];
+            // Preload next video in background (using history-aware selection)
+            const videoData = this.selectRandomVideo();
 
             // Load next video into the hidden video element
             this.nextVideo.src = videoData.src;
