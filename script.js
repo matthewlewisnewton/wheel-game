@@ -225,7 +225,8 @@ class FourHumorsPuzzle {
                     outerRadius: ring.outerRadius,
                     segmentAngle,
                     label,
-                    snapped: false
+                    snapped: false,
+                    lockedQuadrant: null // Track which quadrant this arc is locked into
                 };
 
                 const arcElement = this.createArcElement(arcData);
@@ -362,7 +363,8 @@ class FourHumorsPuzzle {
 
     handleMouseDown(e) {
         const target = this.getArcSegment(e.target);
-        if (target && !this.getArcData(target).snapped) {
+        if (target) {
+            // Allow dragging even if snapped (locked)
             this.startDrag(target, e.clientX, e.clientY);
         }
     }
@@ -370,7 +372,8 @@ class FourHumorsPuzzle {
     handleTouchStart(e) {
         e.preventDefault();
         const target = this.getArcSegment(e.target);
-        if (target && !this.getArcData(target).snapped) {
+        if (target) {
+            // Allow dragging even if snapped (locked)
             const touch = e.touches[0];
             this.startDrag(target, touch.clientX, touch.clientY);
         }
@@ -426,6 +429,11 @@ class FourHumorsPuzzle {
             // Move to top again after dragging to ensure it stays on top
             this.draggableGroup.appendChild(this.draggedElement);
 
+            const arcData = this.getArcData(this.draggedElement);
+            
+            // If already locked, unlock it when moved
+            this.unlockArc(arcData, this.draggedElement);
+
             // Apply physics push before checking for snap
             if (this.physicsEnabled) {
                 this.applyPhysicsPush(this.draggedElement);
@@ -436,11 +444,54 @@ class FourHumorsPuzzle {
         }
     }
 
+    getQuadrantForAngle(angle) {
+        // Normalize angle to 0-360
+        const normalizedAngle = ((angle % 360) + 360) % 360;
+        
+        // Quadrants are aligned with the humors:
+        // Choleric (yellow bile)   : 315° -> 45°
+        // Sanguine (blood)         : 45°  -> 135°
+        // Phlegmatic (phlegm)      : 135° -> 225°
+        // Melancholic (black bile) : 225° -> 315°
+        if (normalizedAngle >= 315 || normalizedAngle < 45) {
+            return 'choleric';
+        } else if (normalizedAngle >= 45 && normalizedAngle < 135) {
+            return 'sanguine';
+        } else if (normalizedAngle >= 135 && normalizedAngle < 225) {
+            return 'phlegmatic';
+        } else {
+            return 'melancholic';
+        }
+    }
+
+    getQuadrantCenterAngle(quadrant) {
+        const quadrantCenters = {
+            'sanguine': 45,
+            'phlegmatic': 135,
+            'melancholic': 225,
+            'choleric': 315
+        };
+        return quadrantCenters[quadrant] || 0;
+    }
+
     checkForSnap(element) {
         const arcData = this.getArcData(element);
 
-        // Check if close to correct position
-        const targetAngle = arcData.correctAngle;
+        // Determine which quadrant the arc is currently in based on its center
+        const arcCenterAngle = (arcData.currentAngle + arcData.segmentAngle / 2) % 360;
+        const currentQuadrant = this.getQuadrantForAngle(arcCenterAngle);
+        const quadrantCenter = this.getQuadrantCenterAngle(currentQuadrant);
+        
+        // Calculate snap position: center of the quadrant (with offset like correctAngle)
+        const fullSegmentAngle = 360 / 4; // 90 degrees
+        const centerOffset = (fullSegmentAngle - arcData.segmentAngle) / 2;
+        const targetAngle = (quadrantCenter + centerOffset) % 360;
+        
+        // Determine which quadrant the arc will be locked into based on target position
+        const targetCenterAngle = (targetAngle + arcData.segmentAngle / 2) % 360;
+        const lockedQuadrant = this.getQuadrantForAngle(targetCenterAngle);
+        
+        // Check if close to quadrant center (check distance from arc center to target)
         const angleDiff = Math.abs(arcData.currentAngle - targetAngle);
         const wrappedDiff = Math.min(angleDiff, 360 - angleDiff);
 
@@ -449,20 +500,22 @@ class FourHumorsPuzzle {
         if (wrappedDiff <= snapThreshold) {
             // Check if position is occupied
             if (!this.isPositionOccupied(targetAngle, arcData.ringIndex, arcData.id)) {
-                // Animate to correct position
+                // Animate to quadrant center position
                 this.animateArcToPosition(arcData, targetAngle, 300);
 
                 setTimeout(() => {
                     arcData.currentAngle = targetAngle;
                     arcData.snapped = true;
+                    arcData.lockedQuadrant = lockedQuadrant;
                     element.classList.add('snapped');
                     
-                    // Change fill to gradient
+                    // Change fill to the quadrant's color that it's locked into
                     const path = element.querySelector('path');
+                    const quadrantHumor = this.humorData[lockedQuadrant];
                     if (this.gradientsAvailable) {
-                        path.setAttribute('fill', `url(#${this.humorData[arcData.humor].gradientId})`);
+                        path.setAttribute('fill', `url(#${quadrantHumor.gradientId})`);
                     } else {
-                        path.setAttribute('fill', this.humorData[arcData.humor].color);
+                        path.setAttribute('fill', quadrantHumor.color);
                     }
                     
                     // Move snapped pieces to back of rendering order
@@ -472,7 +525,7 @@ class FourHumorsPuzzle {
                     // Push away any overlapping pieces when snapping
                     this.pushAwayOverlappingPieces(arcData);
 
-                    this.checkWinCondition();
+                    this.checkAllLocked();
                 }, 300);
                 return;
             }
@@ -480,10 +533,10 @@ class FourHumorsPuzzle {
     }
 
     pushAwayOverlappingPieces(snappedArc) {
+        // Push away all arcs, even if they're snapped (locked arcs can still move)
         const sameRingArcs = this.arcSegments.filter(arc =>
             arc.ringIndex === snappedArc.ringIndex &&
-            arc.id !== snappedArc.id &&
-            !arc.snapped
+            arc.id !== snappedArc.id
         );
 
         const overlapping = [];
@@ -497,6 +550,8 @@ class FourHumorsPuzzle {
 
         if (overlapping.length > 0) {
             overlapping.forEach((arc, index) => {
+                this.unlockArc(arc);
+
                 const snappedStart = snappedArc.currentAngle;
                 const snappedEnd = (snappedArc.currentAngle + snappedArc.segmentAngle) % 360;
                 const arcStart = arc.currentAngle;
@@ -693,6 +748,7 @@ class FourHumorsPuzzle {
     resetPuzzle() {
         this.arcSegments.forEach(arcData => {
             arcData.snapped = false;
+            arcData.lockedQuadrant = null;
             arcData.currentAngle = Math.random() * 360;
             const element = document.getElementById(arcData.id);
             element.classList.remove('snapped');
@@ -703,16 +759,88 @@ class FourHumorsPuzzle {
             
             this.updateArcPosition(element, arcData);
         });
+        this.checkAllLocked();
     }
 
-    checkWinCondition() {
-        const allSnapped = this.arcSegments.every(arc => arc.snapped);
-        if (allSnapped) {
-            this.showSuccessMessage();
-            // setTimeout(() => {
-            //     this.showSuccessMessage();
-            // }, 500);
+    unlockArc(arcData, elementOverride = null, suppressCheck = false) {
+        if (!arcData || !arcData.snapped) {
+            return;
         }
+
+        arcData.snapped = false;
+        arcData.lockedQuadrant = null;
+
+        const element = elementOverride || document.getElementById(arcData.id);
+        if (element) {
+            element.classList.remove('snapped');
+            const path = element.querySelector('path');
+            if (path) {
+                path.setAttribute('fill', '#ffffff');
+            }
+        }
+
+        if (!suppressCheck) {
+            this.checkAllLocked();
+        }
+    }
+
+    checkAllLocked() {
+        const allLocked = this.arcSegments.every(arc => arc.snapped);
+        const subtitle = document.querySelector('.subtitle');
+        
+        if (!subtitle) return;
+        
+        if (allLocked) {
+            // Change subtitle to glowing login button
+            if (!subtitle.classList.contains('login-button')) {
+                subtitle.textContent = 'LOG IN';
+                subtitle.classList.add('login-button');
+                subtitle.style.cursor = 'pointer';
+                // Store bound function for removal
+                this.loginButtonHandler = () => this.checkPassword();
+                subtitle.addEventListener('click', this.loginButtonHandler);
+            }
+        } else {
+            // Revert to subtitle if not all locked
+            if (subtitle.classList.contains('login-button')) {
+                subtitle.textContent = 'Enter your password to log in';
+                subtitle.classList.remove('login-button');
+                subtitle.style.cursor = 'default';
+                if (this.loginButtonHandler) {
+                    subtitle.removeEventListener('click', this.loginButtonHandler);
+                    this.loginButtonHandler = null;
+                }
+            }
+        }
+    }
+
+    checkPassword() {
+        // Check if all arcs are in their correct positions
+        const allCorrect = this.arcSegments.every(arc => {
+            const correctQuadrant = this.getQuadrantForAngle(arc.correctAngle);
+            return arc.lockedQuadrant === correctQuadrant;
+        });
+
+        if (allCorrect) {
+            // Correct password - start victory zoom call
+            this.showSuccessMessage();
+        } else {
+            // Wrong password - shake animation
+            this.shakePuzzle();
+        }
+    }
+
+    shakePuzzle() {
+        const svg = this.svg;
+        svg.style.animation = 'none';
+        // Trigger reflow
+        svg.offsetHeight;
+        svg.style.animation = 'shake 0.5s ease-in-out';
+        
+        // Remove animation after it completes
+        setTimeout(() => {
+            svg.style.animation = '';
+        }, 500);
     }
 
     showSuccessMessage() {
@@ -747,12 +875,13 @@ class FourHumorsPuzzle {
     // Physics system for arc collision and pushing
     applyPhysicsPush(droppedElement) {
         const droppedArc = this.getArcData(droppedElement);
-        if (!droppedArc || droppedArc.snapped) return;
+        // Allow physics even for locked arcs (they can still move)
+        if (!droppedArc) return;
 
+        // Include all arcs in the same ring, even if snapped (they can still move)
         const sameRingArcs = this.arcSegments.filter(arc =>
             arc.ringIndex === droppedArc.ringIndex &&
-            arc.id !== droppedArc.id &&
-            !arc.snapped
+            arc.id !== droppedArc.id
         );
 
         const overlapping = [];
@@ -807,6 +936,8 @@ class FourHumorsPuzzle {
 
     resolveCollisions(droppedArc, overlappingArcs) {
         overlappingArcs.forEach((arc, index) => {
+            this.unlockArc(arc);
+
             const droppedCenter = droppedArc.currentAngle + droppedArc.segmentAngle / 2;
             const arcCenter = arc.currentAngle + arc.segmentAngle / 2;
 
@@ -908,10 +1039,10 @@ class FourHumorsPuzzle {
     }
 
     wouldCauseOverlap(arcData, testAngle) {
+        // Check overlap with all arcs, even snapped ones
         const sameRingArcs = this.arcSegments.filter(arc =>
             arc.ringIndex === arcData.ringIndex &&
-            arc.id !== arcData.id &&
-            !arc.snapped
+            arc.id !== arcData.id
         );
 
         const testArc = {

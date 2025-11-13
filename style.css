@@ -201,6 +201,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-top: 1.5rem;
     margin-bottom: -0.5em;
     margin-left: -6px;
 }
@@ -217,6 +218,47 @@ body {
     color: #e0e0e0;
     letter-spacing: 0.03em;
     font-weight: 400;
+    transition: all 0.3s ease;
+}
+
+.subtitle.login-button {
+    color: #ffffff;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(255, 255, 255, 0.4);
+    animation: glowPulse 2s ease-in-out infinite;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+.subtitle.login-button:hover {
+    text-shadow: 
+        0 0 15px rgba(255, 255, 255, 1),
+        0 0 30px rgba(255, 255, 255, 0.8),
+        0 0 45px rgba(255, 255, 255, 0.6);
+    transform: scale(1.05);
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        text-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.8),
+            0 0 20px rgba(255, 255, 255, 0.6),
+            0 0 30px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+        text-shadow: 
+            0 0 15px rgba(255, 255, 255, 1),
+            0 0 30px rgba(255, 255, 255, 0.8),
+            0 0 45px rgba(255, 255, 255, 0.6);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
 }
 
 .puzzle-area {
@@ -285,31 +327,6 @@ body {
 .arc-segment.snapped path {
     stroke: rgba(255, 255, 255, 0.6);
     stroke-width: 2;
-}
-
-/* Color schemes - inverted colors (white) until snapped */
-.choleric path,
-.sanguine path,
-.melancholic path,
-.phlegmatic path {
-    fill: #ffffff;
-}
-
-/* Reveal true colors when snapped */
-.choleric.snapped path {
-    fill: url(#cholericGradient);
-}
-
-.sanguine.snapped path {
-    fill: url(#sanguineGradient);
-}
-
-.melancholic.snapped path {
-    fill: url(#melancholicGradient);
-}
-
-.phlegmatic.snapped path {
-    fill: url(#phlegmaticGradient);
 }
 
 /* Ring-specific styling */
