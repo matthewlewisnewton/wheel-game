@@ -19,6 +19,7 @@ class JerryVideoManager {
 
         // Define video list with optional text
         // jerry-vibing appears twice to make it twice as likely to be selected
+        // extendedDisplay: true makes the text show longer and keeps the last frame visible longer
         this.videos = [
             { src: './jerry-wave.mp4', text: null },
             { src: './jerry-lizard-eyes.mp4', text: null },
@@ -27,8 +28,8 @@ class JerryVideoManager {
             { src: './jerry-vibing.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
-            { src: './jerry-random-fact.mp4', text: "Do you think Mel knows I'm a plant?" },
-            { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT" },
+            { src: './jerry-random-fact.mp4', text: "Do you think Mel knows... I'm a plant?" },
+            { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT", extendedDisplay: true },
         ];
 
         // this.clickedVideo = './jerry-poked-hint.mp4'; // Special video for clicks
@@ -166,9 +167,9 @@ class JerryVideoManager {
 
         this.isWaiting = true;
 
-        // Check if this was the special "my real name" video - wait longer before hiding
-        const wasSpecialVideo = this.currentVideo.src.includes('jerry-my-real-name.mp4');
-        const hideDelay = wasSpecialVideo ? 5000 : 0;
+        // Store current video data to check for extended display
+        const currentVideoData = this.videos.find(v => this.currentVideo.src.includes(v.src));
+        const hideDelay = currentVideoData?.extendedDisplay ? 5000 : 0;
 
         setTimeout(() => {
             this.hideSpeechBubble();
@@ -182,7 +183,7 @@ class JerryVideoManager {
 
             // Wait 1.5 seconds before swapping
             this.pendingTimeout = setTimeout(() => {
-                this.swapVideos(videoData.text, videoData.src);
+                this.swapVideos(videoData);
                 this.isWaiting = false;
                 this.pendingTimeout = null;
             }, 1500);
@@ -262,7 +263,7 @@ class JerryVideoManager {
         });
     }
 
-    swapVideos(text, videoSrc) {
+    swapVideos(videoData) {
         // Store references before swapping
         const videoToHide = this.currentVideo;
         const videoToShow = this.nextVideo;
@@ -297,10 +298,8 @@ class JerryVideoManager {
         });
 
         // Handle text with speech bubble animation (same as poked interaction)
-        if (text) {
-            // Check if this is the special "my real name" video - show longer
-            const isSpecialVideo = videoSrc === './jerry-my-real-name.mp4';
-            this.showSpeechBubbleWithText(text, isSpecialVideo);
+        if (videoData.text) {
+            this.showSpeechBubbleWithText(videoData.text, videoData.extendedDisplay || false);
         } else {
             this.hideSpeechBubble();
         }
