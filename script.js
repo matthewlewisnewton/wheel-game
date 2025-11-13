@@ -844,32 +844,40 @@ class FourHumorsPuzzle {
     }
 
     showSuccessMessage() {
+        // Show the lord-brayne animation in fullscreen overlay
         const overlay = document.createElement('div');
-        overlay.className = 'zoom-overlay';
-
-        const popup = document.createElement('div');
-        popup.className = 'zoom-popup';
-
-        popup.innerHTML = `
-            <div class="zoom-header">
-                <div class="zoom-title">Access Granted</div>
-                <div class="zoom-status">Harmony Restored</div>
-            </div>
-            <div class="zoom-body">
-                <div class="connection-animation">
-                    <div class="mystical-circle"></div>
-                    <div class="mystical-circle"></div>
-                    <div class="mystical-circle"></div>
-                </div>
-                <p class="connection-text">The humors are balanced...</p>
-                <p class="connection-subtext">Welcome to PATRYON</p>
-            </div>
+        overlay.className = 'lord-brayne-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            background: #000000;
         `;
 
-        overlay.appendChild(popup);
+        const iframe = document.createElement('iframe');
+        iframe.src = './lord-brayne-animation/index.html';
+        iframe.style.cssText = `
+            width: 100%;
+            height: 100%;
+            border: none;
+        `;
+        iframe.allow = 'autoplay';
+
+        overlay.appendChild(iframe);
         document.body.appendChild(overlay);
 
-        setTimeout(() => overlay.classList.add('active'), 10);
+        // Animation runs for ~109 seconds, then outro phases take ~4.5 seconds
+        // Total: ~115 seconds. Add a small buffer for safety
+        const animationDuration = 120000; // 120 seconds in milliseconds
+
+        setTimeout(() => {
+            // Animation complete - remove overlay and refresh page
+            overlay.remove();
+            window.location.reload();
+        }, animationDuration);
     }
 
     // Physics system for arc collision and pushing
@@ -1080,8 +1088,19 @@ class CrosshairManager {
 }
 
 // Initialize the game when the DOM is loaded
+let puzzleInstance = null;
+
 document.addEventListener('DOMContentLoaded', () => {
-    new FourHumorsPuzzle();
+    puzzleInstance = new FourHumorsPuzzle();
     new JerryVideoManager();
     new CrosshairManager();
+
+    // Debug key handler: Shift+J to trigger puzzle solved (bypasses password check)
+    document.addEventListener('keydown', (e) => {
+        if (e.shiftKey && e.key === 'J') {
+            if (puzzleInstance) {
+                puzzleInstance.showSuccessMessage();
+            }
+        }
+    });
 });
