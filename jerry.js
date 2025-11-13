@@ -5,6 +5,7 @@ class JerryVideoManager {
         this.textBox = document.getElementById('jerry-text');
         this.speechBubble = document.getElementById('jerry-speech-bubble');
         this.speechBubbleContent = document.querySelector('.speech-bubble-content');
+        this.container = document.getElementById('jerry-container');
 
         // Track which video is currently active
         this.currentVideo = this.video1;
@@ -14,16 +15,20 @@ class JerryVideoManager {
         this.pendingTimeout = null; // Track pending setTimeout for cancellation
         this.typingTimeout = null; // Track typing animation timeout
         this.fadeOutTimeout = null; // Track speech bubble fade out timeout
+        this.isClickDebounced = false; // Debounce flag to prevent multiple clicks
 
         // Define video list with optional text
         // jerry-vibing appears twice to make it twice as likely to be selected
         this.videos = [
-            { src: './jarry-wave.mp4', text: null },
+            { src: './jerry-wave.mp4', text: null },
             { src: './jerry-lizard-eyes.mp4', text: null },
             { src: './jerry-sideeye.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
             { src: './jerry-vibing.mp4', text: null },
+            { src: './jerry-vibing.mp4', text: null },
+            { src: './jerry-random-fact.mp4', text: "Do you think Mel knows I'm a plant?" },
+            { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT" },
         ];
 
         this.clickedVideo = './jerry-poked-hint.mp4'; // Special video for clicks
@@ -59,14 +64,66 @@ class JerryVideoManager {
             }
         });
 
-        // Handle click on both videos
-        this.video1.addEventListener('click', () => {
-            this.onVideoClicked();
+        // Handle click on both videos with smaller clickable area
+        this.video1.addEventListener('click', (e) => {
+            if (this.isClickInJerryArea(e)) {
+                this.onVideoClicked(e);
+            }
         });
 
-        this.video2.addEventListener('click', () => {
-            this.onVideoClicked();
+        this.video2.addEventListener('click', (e) => {
+            if (this.isClickInJerryArea(e)) {
+                this.onVideoClicked(e);
+            }
         });
+    }
+
+    isClickInJerryArea(event) {
+        const video = event.target;
+        const rect = video.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        // Define a clickable area that's 70% of the video size, centered
+        const padding = 0.15; // 15% padding on each side
+        const minX = rect.width * padding;
+        const maxX = rect.width * (1 - padding);
+        const minY = rect.height * padding;
+        const maxY = rect.height * (1 - padding);
+
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
+
+    createSparks(event) {
+        const video = event.target;
+        const rect = video.getBoundingClientRect();
+        const clickX = event.clientX - rect.left;
+        const clickY = event.clientY - rect.top;
+
+        // Create 8 sparks
+        for (let i = 0; i < 8; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'jerry-spark';
+
+            // Random angle for each spark
+            const angle = (Math.PI * 2 * i) / 8 + (Math.random() - 0.5) * 0.5;
+            const distance = 50 + Math.random() * 30;
+            const endX = clickX + Math.cos(angle) * distance;
+            const endY = clickY + Math.sin(angle) * distance;
+
+            // Set CSS variables for animation
+            spark.style.setProperty('--start-x', clickX + 'px');
+            spark.style.setProperty('--start-y', clickY + 'px');
+            spark.style.setProperty('--end-x', endX + 'px');
+            spark.style.setProperty('--end-y', endY + 'px');
+
+            this.container.appendChild(spark);
+
+            // Remove spark after animation
+            setTimeout(() => {
+                spark.remove();
+            }, 500);
+        }
     }
 
     onVideoEnded() {
@@ -75,28 +132,53 @@ class JerryVideoManager {
         // If we just finished the clicked video, return to normal flow
         if (this.isPlayingClickedVideo) {
             this.isPlayingClickedVideo = false;
+            // Reset debounce flag when clicked video finishes
+            this.isClickDebounced = false;
         }
 
         this.isWaiting = true;
-        this.hideText();
 
-        // Preload next video in background
-        const randomIndex = Math.floor(Math.random() * this.videos.length);
-        const videoData = this.videos[randomIndex];
+        // Check if this was the special "my real name" video - wait longer before hiding
+        const wasSpecialVideo = this.currentVideo.src.includes('jerry-my-real-name.mp4');
+        const hideDelay = wasSpecialVideo ? 5000 : 0;
 
-        // Load next video into the hidden video element
-        this.nextVideo.src = videoData.src;
-        this.nextVideo.load();
+        setTimeout(() => {
+            this.hideSpeechBubble();
 
-        // Wait 1.5 seconds before swapping
-        this.pendingTimeout = setTimeout(() => {
-            this.swapVideos(videoData.text);
-            this.isWaiting = false;
-            this.pendingTimeout = null;
-        }, 1500);
+            // Preload next video in background
+            const randomIndex = Math.floor(Math.random() * this.videos.length);
+            const videoData = this.videos[randomIndex];
+
+            // Load next video into the hidden video element
+            this.nextVideo.src = videoData.src;
+            this.nextVideo.load();
+
+            // Wait 1.5 seconds before swapping
+            this.pendingTimeout = setTimeout(() => {
+                this.swapVideos(videoData.text, videoData.src);
+                this.isWaiting = false;
+                this.pendingTimeout = null;
+            }, 1500);
+        }, hideDelay);
     }
 
-    onVideoClicked() {
+    onVideoClicked(event) {
+        // Debounce: if already handling a click, ignore
+        if (this.isClickDebounced) {
+            return;
+        }
+
+        // Set debounce flag
+        this.isClickDebounced = true;
+
+        // Reset debounce after 8 seconds as a safety measure
+        setTimeout(() => {
+            this.isClickDebounced = false;
+        }, 8000);
+
+        // Create sparks at click location
+        this.createSparks(event);
+
         // Cancel any pending transitions/timeouts
         if (this.pendingTimeout) {
             clearTimeout(this.pendingTimeout);
@@ -104,7 +186,7 @@ class JerryVideoManager {
         }
         this.isWaiting = false;
 
-        this.hideText();
+        this.hideSpeechBubble();
         this.isPlayingClickedVideo = true;
 
         // Show speech bubble
@@ -120,10 +202,6 @@ class JerryVideoManager {
         const videoToHide = this.currentVideo;
         const videoToShow = this.nextVideo;
 
-        // Hide the current video immediately
-        videoToHide.style.display = 'none';
-        videoToHide.currentTime = 0;
-
         // Load the poked-hint video in the next video element
         videoToShow.src = this.clickedVideo;
         videoToShow.load();
@@ -137,23 +215,27 @@ class JerryVideoManager {
             // Start playing the new video
             videoToShow.play();
 
-            // Fade in poked-hint
+            // Fade in new video and fade out old video simultaneously
+            videoToHide.style.opacity = '0';
             videoToShow.style.opacity = '1';
 
             // Wait for fade transition (500ms), then clean up
             setTimeout(() => {
+                // Now hide and reset the old video
+                videoToHide.style.display = 'none';
+                videoToHide.pause();
+                videoToHide.currentTime = 0;
+                videoToHide.style.opacity = '1';
+
                 // Swap references
                 const temp = this.currentVideo;
                 this.currentVideo = this.nextVideo;
                 this.nextVideo = temp;
-
-                // Reset old video opacity for next use
-                videoToHide.style.opacity = '1';
             }, 500);
         });
     }
 
-    swapVideos(text) {
+    swapVideos(text, videoSrc) {
         // Store references before swapping
         const videoToHide = this.currentVideo;
         const videoToShow = this.nextVideo;
@@ -187,11 +269,13 @@ class JerryVideoManager {
             }, 500);
         });
 
-        // Handle text
+        // Handle text with speech bubble animation (same as poked interaction)
         if (text) {
-            this.showText(text);
+            // Check if this is the special "my real name" video - show longer
+            const isSpecialVideo = videoSrc === './jerry-my-real-name.mp4';
+            this.showSpeechBubbleWithText(text, isSpecialVideo);
         } else {
-            this.hideText();
+            this.hideSpeechBubble();
         }
     }
 
@@ -222,8 +306,8 @@ class JerryVideoManager {
         this.textBox.style.display = 'none';
     }
 
-    showSpeechBubble() {
-        const message = "Why are you bothering me?\nHave you tried looking at the art?";
+    showSpeechBubble(customMessage = null, extendedDisplay = false) {
+        const message = customMessage || "Bleh, what is it!\nHave you even tried looking at the art?";
 
         // Clear any existing timeouts
         if (this.typingTimeout) {
@@ -246,13 +330,18 @@ class JerryVideoManager {
             this.typeText(message, 0);
         }, 800);
 
-        // Schedule fade out when video ends (~7 seconds total, fade out at ~6.5s)
+        // Schedule fade out - longer duration for special videos (10 seconds vs 6.5 seconds)
+        const fadeOutDelay = extendedDisplay ? 10000 : 6500;
         this.fadeOutTimeout = setTimeout(() => {
             this.speechBubble.classList.remove('visible');
             setTimeout(() => {
                 this.speechBubble.style.display = 'none';
             }, 500);
-        }, 6500);
+        }, fadeOutDelay);
+    }
+
+    showSpeechBubbleWithText(text, extendedDisplay = false) {
+        this.showSpeechBubble(text, extendedDisplay);
     }
 
     typeText(message, index) {
