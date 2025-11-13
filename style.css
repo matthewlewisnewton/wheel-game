@@ -6,25 +6,88 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    cursor: none;
 }
 
 #jerry-container {
     position: fixed;
-    bottom: 95px;
+    bottom: 120px;
     right: 4px;
-    width: 180px;
-    height: 180px;
+    width: 216px;
+    height: 216px;
     z-index: 1000;
 }
 
 #jerry-container video {
     width: 100%;
     height: auto;
-    cursor: pointer;
+    cursor: none;
     position: absolute;
     top: 0;
     left: 0;
     transition: opacity 0.5s ease;
+}
+
+#jerry-container {
+    cursor: none;
+}
+
+.crosshair {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    z-index: 1003;
+    display: none;
+}
+
+.crosshair::before,
+.crosshair::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.crosshair::before {
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    transform: translateX(-50%);
+}
+
+.crosshair::after {
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-50%);
+}
+
+.jerry-spark {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1002;
+    animation: sparkFly 0.5s ease-out forwards;
+}
+
+@keyframes sparkFly {
+    0% {
+        left: var(--start-x, 0px);
+        top: var(--start-y, 0px);
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        left: var(--end-x);
+        top: var(--end-y);
+        transform: scale(0.3);
+        opacity: 0;
+    }
 }
 
 #jerry-video-1 {
@@ -53,8 +116,9 @@
 
 #jerry-speech-bubble {
     position: absolute;
-    bottom: calc(50% + 8px);
+    bottom: 100%;
     right: 0;
+    margin-bottom: -80px;
     background: #000000;
     color: #ffffff;
     padding: 16px 20px;
@@ -72,25 +136,27 @@
 #jerry-speech-bubble::after {
     content: '';
     position: absolute;
-    bottom: -15px;
+    top: 100%;
     right: 20px;
     width: 0;
     height: 0;
     border-left: 15px solid transparent;
     border-right: 15px solid transparent;
-    border-top: 15px solid #ffffff;
+    border-bottom: 15px solid #ffffff;
+    transform: rotate(180deg);
 }
 
 #jerry-speech-bubble::before {
     content: '';
     position: absolute;
-    bottom: -11px;
+    top: calc(100% - 4px);
     right: 23px;
     width: 0;
     height: 0;
     border-left: 12px solid transparent;
     border-right: 12px solid transparent;
-    border-top: 12px solid #000000;
+    border-bottom: 12px solid #000000;
+    transform: rotate(180deg);
     z-index: 1;
 }
 
@@ -126,7 +192,7 @@ body {
     text-align: center;
     background: transparent;
     padding: 40px 60px;
-    max-width: 1400px;
+    max-width: 1200px;
     width: 100%;
 }
 
@@ -135,44 +201,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
+    margin-bottom: -0.5em;
+    margin-left: -6px;
 }
 
-.logo-icon {
-    width: 60px;
-    height: 60px;
-    background: #ffffff;
-    border-radius: 50%;
-    position: relative;
-}
-
-.logo-icon::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 70%;
-    background: #000000;
-    clip-path: polygon(30% 0%, 70% 0%, 70% 35%, 100% 35%, 50% 100%, 0% 35%, 30% 35%);
-}
-
-.logo-text {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 4em;
-    font-weight: 900;
-    letter-spacing: 0.05em;
-    color: #ffffff;
-    text-transform: uppercase;
+.patryon-logo-image {
+    max-width: 480px;
+    width: 100%;
+    height: auto;
 }
 
 .subtitle {
     font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
-    font-size: 1.8em;
+    font-size: 2.2em;
     color: #e0e0e0;
-    margin-bottom: 40px;
     letter-spacing: 0.03em;
     font-weight: 400;
 }
@@ -180,7 +222,7 @@ body {
 .puzzle-area {
     display: flex;
     justify-content: center;
-    margin: 40px 0;
+    margin-top: -1rem;
 }
 
 #puzzle-svg {
@@ -486,21 +528,7 @@ body {
     color: #cccccc;
 }
 
-/* Responsive design */
-@media (max-width: 1200px) {
-    .game-container {
-        padding: 30px 40px;
-    }
-    
-    .logo-text {
-        font-size: 3em;
-    }
-    
-    .subtitle {
-        font-size: 1.5em;
-    }
-}
-
+/* Responsive design - Mobile */
 @media (max-width: 768px) {
     #puzzle-svg {
         width: 95vw;
@@ -509,15 +537,10 @@ body {
         max-height: 600px;
     }
 
-    .logo-icon {
-        width: 40px;
-        height: 40px;
+    .patryon-logo-image {
+        max-width: 240px;
     }
 
-    .logo-text {
-        font-size: 2em;
-    }
-    
     .subtitle {
         font-size: 1.2em;
     }
@@ -533,12 +556,12 @@ body {
     .zoom-title {
         font-size: 1.6em;
     }
-    
+
     .password-hint {
         bottom: 15px;
         right: 15px;
     }
-    
+
     .password-hint a {
         font-size: 1.1em;
     }

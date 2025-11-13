@@ -923,8 +923,34 @@ class FourHumorsPuzzle {
     }
 }
 
+// Development settings
+const SHOW_CROSSHAIR = true; // Set to false for production
+
+// Crosshair cursor manager
+class CrosshairManager {
+    constructor() {
+        if (!SHOW_CROSSHAIR) return;
+
+        this.crosshair = document.createElement('div');
+        this.crosshair.className = 'crosshair';
+        this.crosshair.style.position = 'fixed';
+        this.crosshair.style.display = 'block';
+        document.body.appendChild(this.crosshair);
+
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        document.addEventListener('mousemove', (e) => {
+            this.crosshair.style.left = (e.clientX - 10) + 'px';
+            this.crosshair.style.top = (e.clientY - 10) + 'px';
+        });
+    }
+}
+
 // Initialize the game when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     new FourHumorsPuzzle();
     new JerryVideoManager();
+    new CrosshairManager();
 });
