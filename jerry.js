@@ -2,7 +2,6 @@ class JerryVideoManager {
     constructor() {
         this.video1 = document.getElementById('jerry-video-1');
         this.video2 = document.getElementById('jerry-video-2');
-        this.textBox = document.getElementById('jerry-text');
         this.speechBubble = document.getElementById('jerry-speech-bubble');
         this.speechBubbleContent = document.querySelector('.speech-bubble-content');
         this.container = document.getElementById('jerry-container');
