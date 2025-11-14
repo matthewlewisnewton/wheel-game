@@ -20,20 +20,48 @@ class JerryVideoManager {
         // Define video list with optional text
         // jerry-vibing appears twice to make it twice as likely to be selected
         // extendedDisplay: true makes the text show longer and keeps the last frame visible longer
+        // this.videos = [
+        //     { src: './jerry-wave.mp4', text: null },
+        //     { src: './jerry-lizard-eyes.mp4', text: null },
+        //     { src: './jerry-sideeye.mp4', text: null },
+        //     { src: './jerry-vibing.mp4', text: null },
+        //     { src: './jerry-vibing.mp4', text: null },
+        //     { src: './jerry-vibing.mp4', text: null },
+        //     { src: './jerry-vibing.mp4', text: null },
+        //     { src: './jerry-random-fact.mp4', text: "Do you think Mel knows... I'm a plant?" },
+        //     { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT", extendedDisplay: true },
+        // ];
         this.videos = [
-            { src: './jerry-wave.mp4', text: null },
-            { src: './jerry-lizard-eyes.mp4', text: null },
-            { src: './jerry-sideeye.mp4', text: null },
-            { src: './jerry-vibing.mp4', text: null },
-            { src: './jerry-vibing.mp4', text: null },
-            { src: './jerry-vibing.mp4', text: null },
-            { src: './jerry-vibing.mp4', text: null },
-            { src: './jerry-random-fact.mp4', text: "Do you think Mel knows... I'm a plant?" },
-            { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT", extendedDisplay: true },
+            // { src: './jerry-wave.mp4', text: null },
+            // { src: './jerry-lizard-eyes.mp4', text: null },
+            // { src: './jerry-sideeye.mp4', text: null },
+            // { src: './jerry-vibing.mp4', text: null },
+            // { src: './jerry-vibing.mp4', text: null },
+            { src: './new-jerry-videos/turn.mp4', text: null },
+            { src: './new-jerry-videos/butt.mp4', text: null },
+            { src: './new-jerry-videos/look-around.mp4', text: null },
+            { src: './new-jerry-videos/look-around.mp4', text: null },
+            { src: './new-jerry-videos/side-eye.mp4', text: null },
+            { src: './new-jerry-videos/side-eye.mp4', text: null },
+            { src: './new-jerry-videos/does-he-know.mp4', text: "Do you think Mel knows...\n I'm a plant?", extendedDisplay: true },
+            // { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT", extendedDisplay: true },
         ];
 
-        // this.clickedVideo = './jerry-poked-hint.mp4'; // Special video for clicks
-        this.clickedVideo = './jerry-mad-at-being-poked.mp4';
+        // Array of possible clicked videos with different durations and text
+        this.clickedVideos = [
+            {
+                src: './new-jerry-videos/poked1.mp4',
+                text: "Bleh!\nHave you even tried looking at the art?",
+                delay: 2500,
+                duration: 10000
+            },
+            {
+                src: './new-jerry-videos/point-left.mp4',
+                text: "maybe you should look at the wunderkammers",
+                delay: 1500,
+                duration: 5000
+            }
+        ];
 
         this.setupEventListeners();
         this.startInitialVideo();
@@ -168,8 +196,12 @@ class JerryVideoManager {
         this.isWaiting = true;
 
         // Store current video data to check for extended display
-        const currentVideoData = this.videos.find(v => this.currentVideo.src.includes(v.src));
-        const hideDelay = currentVideoData?.extendedDisplay ? 5000 : 0;
+        // Match by checking if the URL ends with the video filename
+        const currentVideoData = this.videos.find(v => {
+            const filename = v.src.split('/').pop();
+            return this.currentVideo.src.includes(filename);
+        });
+        const hideDelay = currentVideoData?.extendedDisplay ? 4000 : 0;
 
         setTimeout(() => {
             this.hideSpeechBubble();
@@ -217,8 +249,14 @@ class JerryVideoManager {
         this.hideSpeechBubble();
         this.isPlayingClickedVideo = true;
 
-        // Show speech bubble
-        this.showSpeechBubble();
+        // Randomly select a clicked video
+        const randomIndex = Math.floor(Math.random() * this.clickedVideos.length);
+        const clickedVideoData = this.clickedVideos[randomIndex];
+
+        // Show speech bubble after the specific delay with the specific text and duration
+        setTimeout(() => {
+            this.showSpeechBubble(clickedVideoData.text, clickedVideoData.duration >= 10000);
+        }, clickedVideoData.delay);
 
         // Immediately stop both videos and reset their states
         this.video1.pause();
@@ -230,8 +268,8 @@ class JerryVideoManager {
         const videoToHide = this.currentVideo;
         const videoToShow = this.nextVideo;
 
-        // Load the poked-hint video in the next video element
-        videoToShow.src = this.clickedVideo;
+        // Load the selected clicked video in the next video element
+        videoToShow.src = clickedVideoData.src;
         videoToShow.load();
 
         // Prepare new video underneath (opacity 0, but visible)
@@ -333,7 +371,7 @@ class JerryVideoManager {
     }
 
     showSpeechBubble(customMessage = null, extendedDisplay = false) {
-        const message = customMessage || "Bleh, what is it!\nHave you even tried looking at the art?";
+        const message = customMessage || "Bleh!\nHave you even tried looking at the art?";
 
         // Clear any existing timeouts
         if (this.typingTimeout) {
@@ -356,8 +394,9 @@ class JerryVideoManager {
             this.typeText(message, 0);
         }, 800);
 
-        // Schedule fade out - longer duration for special videos (10 seconds vs 6.5 seconds)
-        const fadeOutDelay = extendedDisplay ? 10000 : 6500;
+        // Schedule fade out - longer duration for special videos (12 seconds vs 6.5 seconds)
+        // Extended videos need this long because the bubble shows at video start, not end
+        const fadeOutDelay = extendedDisplay ? 12000 : 6500;
         this.fadeOutTimeout = setTimeout(() => {
             this.speechBubble.classList.remove('visible');
             setTimeout(() => {
