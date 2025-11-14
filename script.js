@@ -843,7 +843,11 @@ class FourHumorsPuzzle {
         }, 500);
     }
 
+
     showSuccessMessage() {
+        //send vicotry signal to all the ports for touchdesigner
+        fetch("http://localhost:3001/win")
+        fetch("http://localhost:3000/win")
         // Show the lord-brayne animation in fullscreen overlay
         const overlay = document.createElement('div');
         overlay.className = 'lord-brayne-overlay';
