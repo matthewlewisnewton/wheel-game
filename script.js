@@ -795,7 +795,7 @@ class FourHumorsPuzzle {
             if (!subtitle.classList.contains('login-button')) {
                 subtitle.textContent = 'LOG IN';
                 subtitle.classList.add('login-button');
-                subtitle.style.cursor = 'pointer';
+                subtitle.style.cursor = 'none';
                 // Store bound function for removal
                 this.loginButtonHandler = () => this.checkPassword();
                 subtitle.addEventListener('click', this.loginButtonHandler);
@@ -805,7 +805,7 @@ class FourHumorsPuzzle {
             if (subtitle.classList.contains('login-button')) {
                 subtitle.textContent = 'Enter your password to log in';
                 subtitle.classList.remove('login-button');
-                subtitle.style.cursor = 'default';
+                subtitle.style.cursor = 'none';
                 if (this.loginButtonHandler) {
                     subtitle.removeEventListener('click', this.loginButtonHandler);
                     this.loginButtonHandler = null;

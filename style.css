@@ -6,7 +6,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    cursor: none;
+    cursor: none !important;
 }
 
 #jerry-container {
@@ -21,7 +21,7 @@
 #jerry-container video {
     width: 100%;
     height: auto;
-    cursor: none;
+    cursor: none !important;
     position: absolute;
     top: 0;
     left: 0;
@@ -29,7 +29,7 @@
 }
 
 #jerry-container {
-    cursor: none;
+    cursor: none !important;
 }
 
 .crosshair {
@@ -187,6 +187,7 @@ body {
     padding: 20px;
     margin: 0;
     overflow: hidden;
+    cursor: none !important;
 }
 
 .game-container {
@@ -301,7 +302,7 @@ body {
 
 /* Draggable arc segments */
 .arc-segment {
-    cursor: grab;
+    cursor: none !important;
     stroke-width: 2;
     stroke: rgba(255, 255, 255, 0.3);
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -314,14 +315,14 @@ body {
 }
 
 .arc-segment.dragging {
-    cursor: grabbing;
+    cursor: none !important;
     opacity: 0.8;
     filter: drop-shadow(0 8px 12px rgba(255, 255, 255, 0.3));
 }
 
 .arc-segment.snapped {
     opacity: 1;
-    cursor: default;
+    cursor: none !important;
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
 }
 
@@ -406,7 +407,7 @@ body {
     padding: 12px 26px;
     margin: 0 12px;
     border-radius: 30px;
-    cursor: pointer;
+    cursor: none !important;
     font-size: 15px;
     font-family: 'Futura PT', 'Trebuchet MS', sans-serif;
     letter-spacing: 0.08em;

@@ -11,6 +11,7 @@ class JerryVideoManager {
         this.nextVideo = this.video2;
         this.isWaiting = false;
         this.isPlayingClickedVideo = false; // Track if we're playing the clicked video
+        this.currentClickedVideoData = null; // Store the current clicked video data
         this.pendingTimeout = null; // Track pending setTimeout for cancellation
         this.typingTimeout = null; // Track typing animation timeout
         this.fadeOutTimeout = null; // Track speech bubble fade out timeout
@@ -36,14 +37,16 @@ class JerryVideoManager {
             // { src: './jerry-lizard-eyes.mp4', text: null },
             // { src: './jerry-sideeye.mp4', text: null },
             // { src: './jerry-vibing.mp4', text: null },
-            // { src: './jerry-vibing.mp4', text: null },
+            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "Thou must pay me a shilling to get a hint for what the humours are doing on the third ring." },
+            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "I hath big tubers and I cannot lie, the bile brothers cannot deny" },
             { src: './new-jerry-videos/turn.mp4', text: null },
             { src: './new-jerry-videos/butt.mp4', text: null },
             { src: './new-jerry-videos/look-around.mp4', text: null },
             { src: './new-jerry-videos/look-around.mp4', text: null },
             { src: './new-jerry-videos/side-eye.mp4', text: null },
             { src: './new-jerry-videos/side-eye.mp4', text: null },
-            { src: './new-jerry-videos/does-he-know.mp4', text: "Do you think Mel knows...\n I'm a plant?", extendedDisplay: true },
+            { src: './new-jerry-videos/side-eye.mp4', text: null },
+            { src: './new-jerry-videos/does-he-know.mp4', text: "Dost thou think Mel doth know...\n I'm a plant?", extendedDisplay: true },
             // { src: './jerry-my-real-name.mp4', text: "The fleshsacks label me Jerry, but my D̷e̶e̷p̵ ̸N̶a̸m̸e̴ is ASMODEUS THE GREAT", extendedDisplay: true },
         ];
 
@@ -57,9 +60,21 @@ class JerryVideoManager {
             },
             {
                 src: './new-jerry-videos/point-left.mp4',
-                text: "maybe you should look at the wunderkammers",
+                text: "The second ring is the wedding ring, each of the four's true love.",
                 delay: 1500,
-                duration: 5000
+                duration: 7000
+            },
+            {
+                src: './new-jerry-videos/point-left.mp4',
+                text: "I see thou art having difficulties. Hast thou tried doomscrolling?",
+                delay: 1500,
+                duration: 7000
+            },
+            {
+                src: './new-jerry-videos/point-left.mp4',
+                text: "Thou may read the innermost ring, but to understand it, thou must read more.",
+                delay: 1500,
+                duration: 7000
             }
         ];
 
@@ -186,11 +201,49 @@ class JerryVideoManager {
     onVideoEnded() {
         if (this.isWaiting) return;
 
-        // If we just finished the clicked video, return to normal flow
-        if (this.isPlayingClickedVideo) {
-            this.isPlayingClickedVideo = false;
-            // Reset debounce flag when clicked video finishes
-            this.isClickDebounced = false;
+        // If we just finished the clicked video, pause at final frame and keep visible for duration
+        if (this.isPlayingClickedVideo && this.currentClickedVideoData) {
+            // Ensure we're paused at the final frame (video already ended, so we're at the last frame)
+            this.currentVideo.pause();
+            // Explicitly seek to the end to ensure we're showing the final frame
+            if (this.currentVideo.duration && !isNaN(this.currentVideo.duration)) {
+                this.currentVideo.currentTime = this.currentVideo.duration;
+            }
+            
+            // Calculate how long to keep the final frame visible
+            // duration is total time from video start, so subtract the video's actual length
+            const videoDuration = (this.currentVideo.duration && !isNaN(this.currentVideo.duration)) 
+                ? this.currentVideo.duration * 1000 // Convert to milliseconds
+                : 0;
+            const remainingDuration = Math.max(0, this.currentClickedVideoData.duration - videoDuration);
+            
+            // Keep the final frame visible for the remaining duration
+            setTimeout(() => {
+                this.isPlayingClickedVideo = false;
+                this.currentClickedVideoData = null;
+                // Reset debounce flag when clicked video finishes
+                this.isClickDebounced = false;
+                
+                // Now proceed with normal flow
+                this.isWaiting = true;
+                this.hideSpeechBubble();
+
+                // Preload next video in background (using history-aware selection)
+                const videoData = this.selectRandomVideo();
+
+                // Load next video into the hidden video element
+                this.nextVideo.src = videoData.src;
+                this.nextVideo.load();
+
+                // Wait 1.5 seconds before swapping
+                this.pendingTimeout = setTimeout(() => {
+                    this.swapVideos(videoData);
+                    this.isWaiting = false;
+                    this.pendingTimeout = null;
+                }, 1500);
+            }, remainingDuration);
+            
+            return; // Exit early, we'll handle the transition after the duration
         }
 
         this.isWaiting = true;
@@ -252,6 +305,7 @@ class JerryVideoManager {
         // Randomly select a clicked video
         const randomIndex = Math.floor(Math.random() * this.clickedVideos.length);
         const clickedVideoData = this.clickedVideos[randomIndex];
+        this.currentClickedVideoData = clickedVideoData; // Store for duration handling
 
         // Show speech bubble after the specific delay with the specific text and duration
         setTimeout(() => {
