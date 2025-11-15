@@ -21,7 +21,7 @@
         "CROWNING",
         "SUPPLEMENT",
         "VICTORY",
-        "REBORN"
+        "PHOENIX"
       ]
     },
     "sanguine": {
@@ -33,7 +33,7 @@
         "POLISHING",
         "MAKEUP",
         "LEECH",
-        "SANCTIFIED"
+        "ANGEL"
       ]
     },
     "melancholic": {
@@ -45,7 +45,7 @@
         "PROTECTING",
         "KNOWLEDGE",
         "TINFOIL",
-        "SCREAMED"
+        "MANDRAKE"
       ]
     },
     "phlegmatic": {
@@ -57,7 +57,7 @@
         "COCOONING",
         "SKINCARE",
         "PEARL",
-        "DEEPENED"
+        "LEVIATHAN"
       ]
     }
   }

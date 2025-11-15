@@ -37,8 +37,10 @@ class JerryVideoManager {
             // { src: './jerry-lizard-eyes.mp4', text: null },
             // { src: './jerry-sideeye.mp4', text: null },
             // { src: './jerry-vibing.mp4', text: null },
-            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "Thou must pay me a shilling to get a hint for what the humours are doing on the third ring." },
-            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "I hath big tubers and I cannot lie, the bile brothers cannot deny" },
+            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "Thou must pay me a SHILLING to get a hint for what the humours are doing on the third ring.\n Study the videos and wunderkammers." },
+            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "Psst! Thou Should Closely Look At Each Humour's Space." },
+            { src: './new-jerry-videos/stretch-and-chat.mp4', text: "Psst! Thou Must Tap Me, ASMODEUS, for Hints!", extendedDisplay: true },
+            { src: './new-jerry-videos/just-between-you-and-me.mp4', text: "I hath big tubers and I cannot lie, the bile brothers cannot deny." },
             { src: './new-jerry-videos/turn.mp4', text: null },
             { src: './new-jerry-videos/butt.mp4', text: null },
             { src: './new-jerry-videos/look-around.mp4', text: null },
@@ -60,19 +62,25 @@ class JerryVideoManager {
             },
             {
                 src: './new-jerry-videos/point-left.mp4',
-                text: "The second ring is the wedding ring, each of the four's true love.",
+                text: "The second ring is the wedding ring, each of the four's true love.\nStudy their personalities and interests.",
+                delay: 1500,
+                duration: 10000
+            },
+            {
+                src: './new-jerry-videos/point-left.mp4',
+                text: "I see thou art having difficulties. Hast thou tried doomscrolling on our apps?",
                 delay: 1500,
                 duration: 7000
             },
             {
                 src: './new-jerry-videos/point-left.mp4',
-                text: "I see thou art having difficulties. Hast thou tried doomscrolling?",
+                text: "Thou may read the innermost ring, but to understand it, thou must read more. \nFind the sacred font in our literature.",
                 delay: 1500,
                 duration: 7000
             },
             {
                 src: './new-jerry-videos/point-left.mp4',
-                text: "Thou may read the innermost ring, but to understand it, thou must read more.",
+                text: "I am among those on the outermost ring, but I am not the only one.",
                 delay: 1500,
                 duration: 7000
             }

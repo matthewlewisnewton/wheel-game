@@ -786,9 +786,20 @@ class FourHumorsPuzzle {
 
     checkAllLocked() {
         const allLocked = this.arcSegments.every(arc => arc.snapped);
+
+        const allCorrect = this.arcSegments.every(arc => {
+            const correctQuadrant = this.getQuadrantForAngle(arc.correctAngle);
+            return arc.lockedQuadrant === correctQuadrant;
+        });
+
+        if (allCorrect) {
+            // Correct password - start victory zoom call
+            this.showSuccessMessage();
+            return;
+        }
         const subtitle = document.querySelector('.subtitle');
-        
         if (!subtitle) return;
+
         
         if (allLocked) {
             // Change subtitle to glowing login button
